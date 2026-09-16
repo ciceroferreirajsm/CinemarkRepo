@@ -1,6 +1,6 @@
 # Cinemark — Movie Catalog & Notification Consumer
 
-Solução para o teste prático de Desenvolvedor .NET Pleno da Cinemark Brasil: um
+Solução Cinemark Brasil: um
 catálogo de filmes (**Movie Catalog API**) e um serviço de notificações
 (**Notification Consumer**) que consome os eventos de domínio publicados pelo
 catálogo via SQS/LocalStack.
@@ -313,5 +313,4 @@ decisão tomada e o motivo estão documentados aqui, em vez de travar a entrega:
 - [ ] **Testes de integração para Infrastructure** (MongoRepository/RedisCacheService/SqsEventPublisher) não foram implementados — exigiriam Testcontainers ou os próprios containers do compose; a exigência de cobertura do enunciado é explicitamente sobre Application/Domain, que estão cobertas.
 - [ ] **Rate limiting / autenticação** não implementados — não solicitados no enunciado.
 - [ ] **Retry/backoff com DLQ para o consumer SQS** não configurado no LocalStack (mensagem com erro fica na fila para nova tentativa via visibility timeout padrão, mas não há uma dead-letter queue dedicada) — mencionado aqui como possível evolução, não bloqueante para o escopo local pedido.
-#   C i n e m a r k R e p o  
- 
+#
