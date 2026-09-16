@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MovieCatalog.Api/MovieCatalog.Api.csproj" />
+    <Project Path="src/MovieCatalog.Application/MovieCatalog.Application.csproj" />
+    <Project Path="src/MovieCatalog.Domain/MovieCatalog.Domain.csproj" />
+    <Project Path="src/MovieCatalog.Infrastructure/MovieCatalog.Infrastructure.csproj" />
+    <Project Path="src/NotificationConsumer.Api/NotificationConsumer.Api.csproj" />
+    <Project Path="src/NotificationConsumer.Application/NotificationConsumer.Application.csproj" />
+    <Project Path="src/NotificationConsumer.Infrastructure/NotificationConsumer.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MovieCatalog.UnitTests/MovieCatalog.UnitTests.csproj" />
+    <Project Path="tests/NotificationConsumer.UnitTests/NotificationConsumer.UnitTests.csproj" />
+  </Folder>
+</Solution>

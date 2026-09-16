@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/coverage/
+**/TestResults/
+**/logs/
+.git/
+.vs/
+.vscode/
+tests/
+docker/
+README.md

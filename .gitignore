@@ -1,0 +1,21 @@
+## .NET
+bin/
+obj/
+*.user
+
+## Test/coverage artifacts
+coverage/
+TestResults/
+*.trx
+
+## Logs
+logs/
+
+## IDE
+.vs/
+.vscode/
+*.suo
+
+## OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,86 @@
+@baseUrl = http://localhost:8080/api/v1
+
+### Health check
+GET http://localhost:8080/health
+
+### Create a film
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+  "title": "Duna: Parte Dois",
+  "synopsis": "Paul Atreides se une aos Fremen para vingar sua família.",
+  "genre": "FiccaoCientifica",
+  "releaseDate": "2024-03-01T00:00:00Z",
+  "durationMinutes": 166,
+  "rating": 8.7
+}
+
+### Create another film (different genre, for list filtering)
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+  "title": "O Poderoso Chefão",
+  "synopsis": "A saga da família Corleone.",
+  "genre": "Drama",
+  "releaseDate": "1972-03-24T00:00:00Z",
+  "durationMinutes": 175,
+  "rating": 9.2
+}
+
+### Attempt to create a duplicate title (expects 400)
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+  "title": "Duna: Parte Dois",
+  "genre": "FiccaoCientifica",
+  "releaseDate": "2024-03-01T00:00:00Z",
+  "durationMinutes": 166,
+  "rating": 8.7
+}
+
+### Invalid payload -- missing title, invalid duration (expects 400 with field errors)
+POST {{baseUrl}}/films
+Content-Type: application/json
+
+{
+  "title": "",
+  "genre": "Drama",
+  "releaseDate": "2024-01-01T00:00:00Z",
+  "durationMinutes": 0,
+  "rating": 15
+}
+
+### Get film by id (replace {id} with a real id returned above)
+GET {{baseUrl}}/films/{id}
+
+### Get film by non-existent id (expects 404)
+GET {{baseUrl}}/films/000000000000000000000000
+
+### List films (default paging)
+GET {{baseUrl}}/films
+
+### List films filtered by genre and active status, with paging
+GET {{baseUrl}}/films?genre=Drama&active=true&page=1&pageSize=10
+
+### Update a film (replace {id} with a real id)
+PUT {{baseUrl}}/films/{id}
+Content-Type: application/json
+
+{
+  "title": "Duna: Parte Dois",
+  "synopsis": "Sinopse revisada.",
+  "genre": "FiccaoCientifica",
+  "releaseDate": "2024-03-01T00:00:00Z",
+  "durationMinutes": 166,
+  "rating": 9.0,
+  "active": true
+}
+
+### Soft-delete a film (replace {id} with a real id, expects 204)
+DELETE {{baseUrl}}/films/{id}
+
+### Confirm the deleted film is no longer returned (expects 404)
+GET {{baseUrl}}/films/{id}

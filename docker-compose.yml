@@ -1,0 +1,87 @@
+services:
+  mongodb:
+    image: mongo:7
+    container_name: cinemark-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: cinemark-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:3.8
+    container_name: cinemark-localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs
+      - DEBUG=0
+    volumes:
+      - "./docker/localstack-init:/etc/localstack/init/ready.d"
+      - localstack-data:/var/lib/localstack
+    healthcheck:
+      test: ["CMD", "awslocal", "sqs", "list-queues"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  movie-catalog-api:
+    build:
+      context: .
+      dockerfile: src/MovieCatalog.Api/Dockerfile
+    container_name: cinemark-movie-catalog-api
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MongoDb__ConnectionString=mongodb://mongodb:27017
+      - MongoDb__DatabaseName=moviecatalog
+      - Redis__ConnectionString=redis:6379
+      - Sqs__ServiceUrl=http://localstack:4566
+      - Sqs__FilmCreatedQueueUrl=http://localstack:4566/000000000000/film-created
+      - Sqs__FilmUpdatedQueueUrl=http://localstack:4566/000000000000/film-updated
+      - Sqs__FilmDeletedQueueUrl=http://localstack:4566/000000000000/film-deleted
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+
+  notification-consumer-api:
+    build:
+      context: .
+      dockerfile: src/NotificationConsumer.Api/Dockerfile
+    container_name: cinemark-notification-consumer-api
+    ports:
+      - "8081:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Sqs__ServiceUrl=http://localstack:4566
+      - Sqs__FilmCreatedQueueUrl=http://localstack:4566/000000000000/film-created
+      - Sqs__FilmUpdatedQueueUrl=http://localstack:4566/000000000000/film-updated
+      - Sqs__FilmDeletedQueueUrl=http://localstack:4566/000000000000/film-deleted
+    depends_on:
+      localstack:
+        condition: service_healthy
+
+volumes:
+  mongodb-data:
+  localstack-data:

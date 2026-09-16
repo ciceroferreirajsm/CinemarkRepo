@@ -1,0 +1,5 @@
+### Health check -- reports SQS connectivity status
+GET http://localhost:8081/health
+
+### Swagger document
+GET http://localhost:8081/swagger/v1/swagger.json
